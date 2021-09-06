@@ -1,0 +1,3 @@
+Google vite for basic instructions on setting up a project.
+
+To run, 'npm run dev'
