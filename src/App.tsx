@@ -1,20 +1,38 @@
 import React, { useState } from 'react'
-import logo from './logo.svg'
 import './App.css'
 
-let gameData = {
+interface Resource{
+  resource_name: string,
+  quantity: number
+}
+
+type TypeExample = {
+  resource_name: String,
+  quantity: number
+}
+
+let gameData: {[resource: string]: Resource[]} = {
   "resources": [
-    ["Wood",1],
-    ["Stone",2],
-    ["Copper",3],
-    ["Iron",4]
+    {resource_name: "Wood", quantity:1},
+    {resource_name: "Stone", quantity:2},
+    {resource_name: "Copper", quantity:3},
+    {resource_name: "Iron", quantity:4}
   ]
 };
 
-let Resource = (resource: any) => {
+// This component is now superseded by TSResourceDisplay
+let ResourceDisplay = (resource: any) => {
   return (
     <p>
-      {resource[0]} {resource[1]}
+      {resource.resource.resource_name} {resource.resource.quantity}
+    </p>
+  )
+}
+
+let TSResourceDisplay = ({ resource }: { resource: Resource }) => {
+  return (
+    <p>
+      {resource.resource_name} {resource.quantity}
     </p>
   )
 }
@@ -25,8 +43,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {gameData.resources.map(r => 
-          Resource(r)
+        {gameData.resources.map(r => {
+          return <TSResourceDisplay resource={r} key={r["resource_name"]} />
+        }
+          
         )}
       </header>
     </div>
