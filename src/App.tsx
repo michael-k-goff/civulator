@@ -11,12 +11,23 @@ let gameData = {
   ]
 };
 
+let Resource = (resource: any) => {
+  return (
+    <p>
+      {resource[0]} {resource[1]}
+    </p>
+  )
+}
+
 function App() {
   const [frameCount, setFrameCount] = useState(0)
 
   return (
     <div className="App">
       <header className="App-header">
+        {gameData.resources.map(r => 
+          Resource(r)
+        )}
       </header>
     </div>
   )
