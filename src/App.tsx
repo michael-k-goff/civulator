@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Component, MouseEvent, useState } from 'react'
 import './App.css'
 
 interface Resource{
@@ -13,10 +13,10 @@ type TypeExample = {
 
 let gameData: {[resource: string]: Resource[]} = {
   "resources": [
-    {resource_name: "Wood", quantity:1},
-    {resource_name: "Stone", quantity:2},
-    {resource_name: "Copper", quantity:3},
-    {resource_name: "Iron", quantity:4}
+    {resource_name: "Wood", quantity:0},
+    {resource_name: "Stone", quantity:0},
+    {resource_name: "Copper", quantity:0},
+    {resource_name: "Iron", quantity:0}
   ]
 };
 
@@ -29,10 +29,36 @@ let ResourceDisplay = (resource: any) => {
   )
 }
 
-let TSResourceDisplay = ({ resource }: { resource: Resource }) => {
+interface ButtonParams {
+  message: string,
+  resource: Resource,
+  frameCount: any,
+  setFrameCount: any
+}
+
+export class Button extends Component <ButtonParams> {
+  handleClick(event: MouseEvent) {
+    event.preventDefault();
+    //alert(event.currentTarget.tagName); // alerts BUTTON
+  }
+  
+  render() {
+    return <button onClick={(event: MouseEvent)=>{
+      //this.handleClick(event);
+      event.preventDefault();
+      this.props.resource.quantity += 1;
+      this.props.setFrameCount(this.props.frameCount+1);
+    }}>
+      {this.props.message}
+    </button>
+  }
+}
+
+let TSResourceDisplay = ({ resource, frameCount, setFrameCount }: { resource: Resource, frameCount:any, setFrameCount:any }) => {
   return (
     <p>
       {resource.resource_name} {resource.quantity}
+      <Button message="Harvest" resource={resource} frameCount={frameCount} setFrameCount={setFrameCount}/>
     </p>
   )
 }
@@ -44,7 +70,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         {gameData.resources.map(r => {
-          return <TSResourceDisplay resource={r} key={r["resource_name"]} />
+          return <TSResourceDisplay resource={r} frameCount={frameCount} setFrameCount={setFrameCount} key={r["resource_name"]} />
         }
           
         )}
