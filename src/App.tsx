@@ -15,20 +15,33 @@ let GameDatabase: ResourceName[] = [
 
 interface Resource{
   resource_name: string,
-  quantity: number
+  quantity: number,
+  auto_name: string,
+  auto_number: number
 }
 
 let gameData: {[resource: string]: Resource[]} = {
   "resources": []
 };
 for (let i=0; i<GameDatabase.length; i++) {
-  gameData.resources = gameData.resources.concat({resource_name:GameDatabase[i].resource_name,quantity:0});
+  gameData.resources = gameData.resources.concat({
+      resource_name:GameDatabase[i].resource_name,
+      quantity:0,
+      auto_name:GameDatabase[i].auto_name,
+      auto_number:0
+    });
 }
 
 interface ButtonParams {
   message: string,
   resource: Resource,
   setQuantity: any
+}
+
+interface AutoButtonParams {
+  message: string,
+  resource: Resource,
+  setAutoNumber: any
 }
 
 export class Button extends Component <ButtonParams> {
@@ -43,13 +56,31 @@ export class Button extends Component <ButtonParams> {
   }
 }
 
+export class AutoButton extends Component <AutoButtonParams> {
+  render() {
+    return <button onClick={(event: MouseEvent)=>{
+      event.preventDefault();
+      this.props.resource.auto_number += 1;
+      this.props.setAutoNumber(this.props.resource.auto_number);
+    }}>
+      {this.props.message}
+    </button>
+  }
+}
+
 let TSResourceDisplay = ({ resource }: { resource: Resource }) => {
   const [quantity, setQuantity] = useState(resource.quantity);
+  const [auto_number, setAutoNumber] = useState(resource.auto_number);
   
   return (
     <p>
       {resource.resource_name} {quantity}
+      <br />
       <Button message="Harvest" resource={resource} setQuantity={setQuantity}/>
+      <br />
+      {resource.auto_name} {auto_number}
+      <br />
+      <AutoButton message={resource.auto_name} resource={resource} setAutoNumber={setAutoNumber}/>
     </p>
   )
 }
