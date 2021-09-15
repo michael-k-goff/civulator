@@ -1,4 +1,4 @@
-import React, { PureComponent, Component, MouseEvent, useState } from 'react'
+import React, { PureComponent, Component, MouseEvent, useState, useEffect } from 'react'
 import './App.css'
 
 interface ResourceName {
@@ -74,11 +74,11 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }) => {
   
   return (
     <p>
-      {resource.resource_name} {quantity}
+      {resource.resource_name} {resource.quantity}
       <br />
       <Button message="Harvest" resource={resource} setQuantity={setQuantity}/>
       <br />
-      {resource.auto_name} {auto_number}
+      {resource.auto_name} {resource.auto_number}
       <br />
       <AutoButton message={resource.auto_name} resource={resource} setAutoNumber={setAutoNumber}/>
     </p>
@@ -87,6 +87,18 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }) => {
 
 function App() {
   const [frameCount, setFrameCount] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      let total_quantity = 0;
+      for (let i=0; i<gameData.resources.length; i++) {
+        gameData.resources[i].quantity += gameData.resources[i].auto_number;
+        total_quantity += gameData.resources[i].quantity
+      }
+      setFrameCount((frameCount) => total_quantity); 
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [frameCount, setFrameCount]);
 
   return (
     <div className="App">
