@@ -45,7 +45,7 @@ interface AutoButtonParams {
 }
 
 export class Button extends Component <ButtonParams> {
-  render() {
+  render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
       this.props.resource.quantity += 1;
@@ -57,7 +57,7 @@ export class Button extends Component <ButtonParams> {
 }
 
 export class AutoButton extends Component <AutoButtonParams> {
-  render() {
+  render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
       this.props.resource.auto_number += 1;
@@ -68,7 +68,7 @@ export class AutoButton extends Component <AutoButtonParams> {
   }
 }
 
-let TSResourceDisplay = ({ resource }: { resource: Resource }) => {
+let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
   const [quantity, setQuantity] = useState(resource.quantity);
   const [auto_number, setAutoNumber] = useState(resource.auto_number);
   
@@ -85,7 +85,7 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }) => {
   )
 }
 
-function App() {
+const App = ():JSX.Element => {
   const [frameCount, setFrameCount] = useState(0)
 
   useEffect(() => {
