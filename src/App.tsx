@@ -3,21 +3,23 @@ import './App.css'
 
 interface ResourceName {
   resource_name: string,
-  auto_name: string
+  auto_name: string,
+  prereqs: {[prereq_resource: string]: number}
 }
 
 let GameDatabase: ResourceName[] = [
-  {resource_name: "Wood", auto_name:"Chop Wood"},
-  {resource_name: "Stone", auto_name:"Quarry Stone"},
-  {resource_name: "Copper", auto_name:"Mine Copper"},
-  {resource_name: "Iron", auto_name:"Mine Iron"}
+  {resource_name: "Wood", auto_name:"Chop Wood", prereqs:{}},
+  {resource_name: "Stone", auto_name:"Quarry Stone", prereqs:{"Wood":1}},
+  {resource_name: "Copper", auto_name:"Mine Copper", prereqs:{"Wood":2}},
+  {resource_name: "Iron", auto_name:"Mine Iron", prereqs:{"Wood":5}}
 ]
 
 interface Resource{
   resource_name: string,
   quantity: number,
   auto_name: string,
-  auto_number: number
+  auto_number: number,
+  prereqs: {[prereq_resource: string]: number}
 }
 
 let gameData: {[resource: string]: Resource[]} = {
@@ -28,7 +30,8 @@ for (let i=0; i<GameDatabase.length; i++) {
       resource_name:GameDatabase[i].resource_name,
       quantity:0,
       auto_name:GameDatabase[i].auto_name,
-      auto_number:0
+      auto_number:0,
+      prereqs: GameDatabase[i].prereqs
     });
 }
 
@@ -49,6 +52,13 @@ export class Button extends Component <ButtonParams> {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
       this.props.resource.quantity += 1;
+      for (let key in this.props.resource.prereqs) {
+        for (let i=0; i<gameData.resources.length; i++) {
+          if (gameData.resources[i].resource_name == key) {
+            gameData.resources[i].quantity -= this.props.resource.prereqs[key]
+          }
+        }
+      }
       this.props.setQuantity(this.props.resource.quantity);
     }}>
       {this.props.message}
@@ -91,12 +101,14 @@ const App = ():JSX.Element => {
   useEffect(() => {
     const interval = setInterval(() => {
       let total_quantity = 0;
-      for (let i=0; i<gameData.resources.length; i++) {
-        gameData.resources[i].quantity += gameData.resources[i].auto_number;
-        total_quantity += gameData.resources[i].quantity
+      if (frameCount % 10 === 0) {
+        for (let i=0; i<gameData.resources.length; i++) {
+          gameData.resources[i].quantity += gameData.resources[i].auto_number;
+          total_quantity += gameData.resources[i].quantity
+        }
       }
-      setFrameCount((frameCount) => total_quantity); 
-    }, 1000);
+      setFrameCount((frameCount) => frameCount+1); 
+    }, 100);
     return () => clearInterval(interval);
   }, [frameCount, setFrameCount]);
 
