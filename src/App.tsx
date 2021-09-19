@@ -8,11 +8,21 @@ interface ResourceName {
   auto_prereqs: {[prereq_resource: string]: number}
 }
 
+interface PowerName {
+  plant_name: string,
+  prereqs: {[prereq_resource: string]: number}
+}
+
 let GameDatabase: ResourceName[] = [
   {resource_name: "Wood", auto_name:"Chop Wood", prereqs:{}, auto_prereqs:{"Wood":4}},
   {resource_name: "Stone", auto_name:"Quarry Stone", prereqs:{"Wood":1}, auto_prereqs:{"Wood":4}},
   {resource_name: "Copper", auto_name:"Mine Copper", prereqs:{"Wood":2}, auto_prereqs:{"Wood":4}},
   {resource_name: "Iron", auto_name:"Mine Iron", prereqs:{"Wood":5}, auto_prereqs:{"Wood":4}}
+]
+
+let PowerDatabase: PowerName[] = [
+  {plant_name: "Stoneworks", prereqs:{"Wood":4}},
+  {plant_name: "Forge", prereqs:{"Iron":4}}
 ]
 
 interface Resource{
@@ -24,8 +34,14 @@ interface Resource{
   auto_prereqs: {[prereq_resource: string]: number}
 }
 
+interface Power{
+  name: string,
+  quantity: number,
+  prereqs: {[prereq_resource: string]: number}
+}
+
 let gameData: {[resource: string]: Resource[]} = {
-  "resources": []
+  "resources": [],
 };
 for (let i=0; i<GameDatabase.length; i++) {
   gameData.resources = gameData.resources.concat({
@@ -36,6 +52,14 @@ for (let i=0; i<GameDatabase.length; i++) {
       prereqs: GameDatabase[i].prereqs,
       auto_prereqs: GameDatabase[i].auto_prereqs
     });
+}
+let powerData: Power[] = []
+for (let i=0; i<PowerDatabase.length; i++) {
+  powerData = powerData.concat({
+    name:PowerDatabase[i].plant_name,
+    quantity:0,
+    prereqs: PowerDatabase[i].prereqs
+  })
 }
 
 interface ButtonParams {
@@ -48,6 +72,11 @@ interface AutoButtonParams {
   message: string,
   resource: Resource,
   setAutoNumber: any
+}
+
+interface PowerPlantParams {
+  message: string,
+  power: Power
 }
 
 const CanDo = (prereqs: {[prereq_resource: string]: number}): boolean => {
@@ -102,6 +131,17 @@ export class AutoButton extends Component <AutoButtonParams> {
   }
 }
 
+export class PowerPlantButton extends Component <PowerPlantParams> {
+  render(): JSX.Element {
+    return <button onClick={(event: MouseEvent) => {
+      event.preventDefault;
+      this.props.power.quantity += 1;
+    }}>
+      {this.props.message}
+    </button>
+  }
+}
+
 let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
   const [quantity, setQuantity] = useState(resource.quantity);
   const [auto_number, setAutoNumber] = useState(resource.auto_number);
@@ -117,6 +157,14 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
       <AutoButton message={resource.auto_name} resource={resource} setAutoNumber={setAutoNumber}/>
     </p>
   )
+}
+
+let PowerPlantDisplay = ({plant}: {plant: Power}): JSX.Element => {
+  return <p>
+    {plant.name} {plant.quantity}
+    <br />
+    <PowerPlantButton message="Build" power={plant}/>
+  </p>
 }
 
 const App = ():JSX.Element => {
@@ -144,6 +192,9 @@ const App = ():JSX.Element => {
         }
           
         )}
+        {powerData.map(p => {
+          return <PowerPlantDisplay plant={p} key={p.name}/>
+        })}
       </header>
     </div>
   )
