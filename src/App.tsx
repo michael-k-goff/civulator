@@ -4,14 +4,15 @@ import './App.css'
 interface ResourceName {
   resource_name: string,
   auto_name: string,
-  prereqs: {[prereq_resource: string]: number}
+  prereqs: {[prereq_resource: string]: number},
+  auto_prereqs: {[prereq_resource: string]: number}
 }
 
 let GameDatabase: ResourceName[] = [
-  {resource_name: "Wood", auto_name:"Chop Wood", prereqs:{}},
-  {resource_name: "Stone", auto_name:"Quarry Stone", prereqs:{"Wood":1}},
-  {resource_name: "Copper", auto_name:"Mine Copper", prereqs:{"Wood":2}},
-  {resource_name: "Iron", auto_name:"Mine Iron", prereqs:{"Wood":5}}
+  {resource_name: "Wood", auto_name:"Chop Wood", prereqs:{}, auto_prereqs:{"Wood":4}},
+  {resource_name: "Stone", auto_name:"Quarry Stone", prereqs:{"Wood":1}, auto_prereqs:{"Wood":4}},
+  {resource_name: "Copper", auto_name:"Mine Copper", prereqs:{"Wood":2}, auto_prereqs:{"Wood":4}},
+  {resource_name: "Iron", auto_name:"Mine Iron", prereqs:{"Wood":5}, auto_prereqs:{"Wood":4}}
 ]
 
 interface Resource{
@@ -19,7 +20,8 @@ interface Resource{
   quantity: number,
   auto_name: string,
   auto_number: number,
-  prereqs: {[prereq_resource: string]: number}
+  prereqs: {[prereq_resource: string]: number},
+  auto_prereqs: {[prereq_resource: string]: number}
 }
 
 let gameData: {[resource: string]: Resource[]} = {
@@ -31,7 +33,8 @@ for (let i=0; i<GameDatabase.length; i++) {
       quantity:0,
       auto_name:GameDatabase[i].auto_name,
       auto_number:0,
-      prereqs: GameDatabase[i].prereqs
+      prereqs: GameDatabase[i].prereqs,
+      auto_prereqs: GameDatabase[i].auto_prereqs
     });
 }
 
@@ -51,11 +54,23 @@ export class Button extends Component <ButtonParams> {
   render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
-      this.props.resource.quantity += 1;
+      let can_do: boolean = true;
       for (let key in this.props.resource.prereqs) {
         for (let i=0; i<gameData.resources.length; i++) {
           if (gameData.resources[i].resource_name == key) {
-            gameData.resources[i].quantity -= this.props.resource.prereqs[key]
+            if (gameData.resources[i].quantity < this.props.resource.prereqs[key]) {
+              can_do = false;
+            }
+          }
+        }
+      }
+      if (can_do) {
+        this.props.resource.quantity += 1;
+        for (let key in this.props.resource.prereqs) {
+          for (let i=0; i<gameData.resources.length; i++) {
+            if (gameData.resources[i].resource_name == key) {
+              gameData.resources[i].quantity -= this.props.resource.prereqs[key]
+            }
           }
         }
       }
@@ -70,7 +85,26 @@ export class AutoButton extends Component <AutoButtonParams> {
   render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
-      this.props.resource.auto_number += 1;
+      let can_do: boolean = true;
+      for (let key in this.props.resource.auto_prereqs) {
+        for (let i=0; i<gameData.resources.length; i++) {
+          if (gameData.resources[i].resource_name == key) {
+            if (gameData.resources[i].quantity < this.props.resource.auto_prereqs[key]) {
+              can_do = false;
+            }
+          }
+        }
+      }
+      if (can_do) {
+        this.props.resource.auto_number += 1;
+        for (let key in this.props.resource.auto_prereqs) {
+          for (let i=0; i<gameData.resources.length; i++) {
+            if (gameData.resources[i].resource_name == key) {
+              gameData.resources[i].quantity -= this.props.resource.auto_prereqs[key]
+            }
+          }
+        }
+      }
       this.props.setAutoNumber(this.props.resource.auto_number);
     }}>
       {this.props.message}
