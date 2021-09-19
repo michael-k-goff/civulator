@@ -50,29 +50,35 @@ interface AutoButtonParams {
   setAutoNumber: any
 }
 
+const CanDo = (prereqs: {[prereq_resource: string]: number}): boolean => {
+  let can_do: boolean = true;
+  for (let key in prereqs) {
+    for (let i:number=0; i<gameData.resources.length; i++) {
+      if (gameData.resources[i].resource_name === key && gameData.resources[i].quantity < prereqs[key]) {
+        can_do = false;
+      }
+    }
+  }
+  return can_do;
+}
+
+const ApplyCost = (prereqs: {[prereq_resource: string]: number}) => {
+  for (let key in prereqs) {
+    for (let i:number=0; i<gameData.resources.length; i++) {
+      if (gameData.resources[i].resource_name == key) {
+        gameData.resources[i].quantity -= prereqs[key]
+      }
+    }
+  }
+}
+
 export class Button extends Component <ButtonParams> {
   render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
-      let can_do: boolean = true;
-      for (let key in this.props.resource.prereqs) {
-        for (let i=0; i<gameData.resources.length; i++) {
-          if (gameData.resources[i].resource_name == key) {
-            if (gameData.resources[i].quantity < this.props.resource.prereqs[key]) {
-              can_do = false;
-            }
-          }
-        }
-      }
-      if (can_do) {
+      if (CanDo(this.props.resource.prereqs)) {
         this.props.resource.quantity += 1;
-        for (let key in this.props.resource.prereqs) {
-          for (let i=0; i<gameData.resources.length; i++) {
-            if (gameData.resources[i].resource_name == key) {
-              gameData.resources[i].quantity -= this.props.resource.prereqs[key]
-            }
-          }
-        }
+        ApplyCost(this.props.resource.prereqs);
       }
       this.props.setQuantity(this.props.resource.quantity);
     }}>
@@ -85,25 +91,9 @@ export class AutoButton extends Component <AutoButtonParams> {
   render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
-      let can_do: boolean = true;
-      for (let key in this.props.resource.auto_prereqs) {
-        for (let i=0; i<gameData.resources.length; i++) {
-          if (gameData.resources[i].resource_name == key) {
-            if (gameData.resources[i].quantity < this.props.resource.auto_prereqs[key]) {
-              can_do = false;
-            }
-          }
-        }
-      }
-      if (can_do) {
+      if (CanDo(this.props.resource.auto_prereqs)) {
         this.props.resource.auto_number += 1;
-        for (let key in this.props.resource.auto_prereqs) {
-          for (let i=0; i<gameData.resources.length; i++) {
-            if (gameData.resources[i].resource_name == key) {
-              gameData.resources[i].quantity -= this.props.resource.auto_prereqs[key]
-            }
-          }
-        }
+        ApplyCost(this.props.resource.auto_prereqs);
       }
       this.props.setAutoNumber(this.props.resource.auto_number);
     }}>
