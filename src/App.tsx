@@ -105,7 +105,7 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
   const [auto_number, setAutoNumber] = useState(resource.auto_number);
   
   return (
-    <p>
+    <div className="resource-div">
       {resource.resource_name} {Math.floor(resource.quantity)}
       <br />
       <Button message="Harvest" resource={resource} setQuantity={setQuantity}/>
@@ -115,17 +115,17 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
       <br />
       <AutoButton message={resource.auto_name} resource={resource} setAutoNumber={setAutoNumber}/>
       {<DisplayQuantity quantity={1+resource.auto_number} costs={resource.auto_prereqs}/>}
-    </p>
+    </div>
   )
 }
 
 let PowerPlantDisplay = ({plant}: {plant: Power}): JSX.Element => {
-  return <p>
+  return <div className="power-div">
     {plant.name} {plant.quantity}
     <br />
     <PowerPlantButton message="Build" power={plant}/>
     {<DisplayQuantity quantity={1+plant.quantity} costs={plant.prereqs}/>}
-  </p>
+  </div>
 }
 
 const NumAutoBonus = (resource: Resource): number => {
@@ -161,14 +161,18 @@ const App = ():JSX.Element => {
   return (
     <div className="App">
       <header className="App-header">
-        {gameData.resources.map(r => {
-          return <TSResourceDisplay resource={r} key={r["resource_name"]} />
-        }
-          
-        )}
-        {powerData.map(p => {
-          return <PowerPlantDisplay plant={p} key={p.name}/>
-        })}
+        <div className="all-resources">
+          {gameData.resources.map(r => {
+            return <TSResourceDisplay resource={r} key={r["resource_name"]} />
+          }
+          )}
+        </div>
+
+        <div className="all-power">
+          {powerData.map(p => {
+            return <PowerPlantDisplay plant={p} key={p.name}/>
+          })}
+        </div>
       </header>
     </div>
   )

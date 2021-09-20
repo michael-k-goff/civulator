@@ -2,6 +2,59 @@
   text-align: left;
 }
 
+.all-resources {
+  width:100%;
+  overflow: hidden;
+  padding: 1% 0 0 1%;
+
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:        border-box;
+}
+
+.resource-div {
+  width: 250px;
+  display:inline-block;
+  margin: 0 1% 1% 0;
+
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:        border-box;
+
+  border: 1px;
+  border-color:blue;
+  border-style: solid;
+}
+
+.all-power {
+  width:100%;
+  overflow: hidden;
+  padding: 1% 0 0 1%;
+
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:        border-box;
+}
+
+.power-div {
+  width: 250px;
+  display:inline-block;
+  margin: 0 1% 1% 0;
+
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:        border-box;
+
+  border: 1px;
+  border-color:orange;
+  border-style: solid;
+}
+
+.resource_display {
+  color: red;
+
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -39,8 +92,4 @@
 
 button {
   font-size: calc(10px + 2vmin);
-}
-
-.resource_display {
-  color: red;
 }
