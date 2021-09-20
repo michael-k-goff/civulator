@@ -91,7 +91,7 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
   
   return (
     <p>
-      {resource.resource_name} {resource.quantity}
+      {resource.resource_name} {Math.floor(resource.quantity)}
       <br />
       <Button message="Harvest" resource={resource} setQuantity={setQuantity}/>
       <br />
@@ -110,6 +110,19 @@ let PowerPlantDisplay = ({plant}: {plant: Power}): JSX.Element => {
   </p>
 }
 
+const NumAutoBonus = (resource: Resource): number => {
+  let a = resource.auto_number;
+  let num_power_plants = 0;
+  for (let i=0; i<powerData.length; i++) {
+    for (let j=0; j<powerData[i].affects.length; j++) {
+      if (powerData[i].affects[j] === resource.resource_name) {
+        num_power_plants += powerData[i].quantity;
+      }
+    }
+  }
+  return a*(1+0.1*num_power_plants);
+}
+
 const App = ():JSX.Element => {
   const [frameCount, setFrameCount] = useState(0)
 
@@ -118,7 +131,7 @@ const App = ():JSX.Element => {
       let total_quantity = 0;
       if (frameCount % 10 === 0) {
         for (let i=0; i<gameData.resources.length; i++) {
-          gameData.resources[i].quantity += gameData.resources[i].auto_number;
+          gameData.resources[i].quantity += NumAutoBonus(gameData.resources[i]);
           total_quantity += gameData.resources[i].quantity
         }
       }

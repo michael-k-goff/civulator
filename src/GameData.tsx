@@ -7,7 +7,8 @@ export interface ResourceName {
   
 export interface PowerName {
     plant_name: string,
-    prereqs: {[prereq_resource: string]: number}
+    prereqs: {[prereq_resource: string]: number},
+    affects: string[]
 }
   
 export let GameDatabase: ResourceName[] = [
@@ -18,8 +19,8 @@ export let GameDatabase: ResourceName[] = [
 ]
   
 export let PowerDatabase: PowerName[] = [
-    {plant_name: "Stoneworks", prereqs:{"Wood":4}},
-    {plant_name: "Forge", prereqs:{"Iron":4}}
+    {plant_name: "Stoneworks", prereqs:{"Wood":4}, affects:["Wood","Stone"]},
+    {plant_name: "Forge", prereqs:{"Iron":4}, affects:["Copper","Iron"]}
 ]
 
 export interface Resource{
@@ -34,7 +35,8 @@ export interface Resource{
 export interface Power{
     name: string,
     quantity: number,
-    prereqs: {[prereq_resource: string]: number}
+    prereqs: {[prereq_resource: string]: number},
+    affects: string[]
   }
   
 export let gameData: {[resource: string]: Resource[]} = {
@@ -55,6 +57,7 @@ export let powerData: Power[] = []
     powerData = powerData.concat({
       name:PowerDatabase[i].plant_name,
       quantity:0,
-      prereqs: PowerDatabase[i].prereqs
+      prereqs: PowerDatabase[i].prereqs,
+      affects: PowerDatabase[i].affects
     })
   }
