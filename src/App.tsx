@@ -19,11 +19,16 @@ interface PowerPlantParams {
   power: Power
 }
 
-const CanDo = (prereqs: {[prereq_resource: string]: number}): boolean => {
+interface CostsParams {
+  quantity: number,
+  costs: {[prereq_resource: string]: number}
+}
+
+const CanDo = (prereqs: {[prereq_resource: string]: number}, quantity: number): boolean => {
   let can_do: boolean = true;
   for (let key in prereqs) {
     for (let i:number=0; i<gameData.resources.length; i++) {
-      if (gameData.resources[i].resource_name === key && gameData.resources[i].quantity < prereqs[key]) {
+      if (gameData.resources[i].resource_name === key && gameData.resources[i].quantity < quantity*prereqs[key]) {
         can_do = false;
       }
     }
@@ -31,11 +36,11 @@ const CanDo = (prereqs: {[prereq_resource: string]: number}): boolean => {
   return can_do;
 }
 
-const ApplyCost = (prereqs: {[prereq_resource: string]: number}) => {
+const ApplyCost = (prereqs: {[prereq_resource: string]: number}, quantity: number) => {
   for (let key in prereqs) {
     for (let i:number=0; i<gameData.resources.length; i++) {
       if (gameData.resources[i].resource_name == key) {
-        gameData.resources[i].quantity -= prereqs[key]
+        gameData.resources[i].quantity -= quantity*prereqs[key]
       }
     }
   }
@@ -45,9 +50,9 @@ export class Button extends Component <ButtonParams> {
   render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
-      if (CanDo(this.props.resource.prereqs)) {
+      if (CanDo(this.props.resource.prereqs,1)) {
         this.props.resource.quantity += 1;
-        ApplyCost(this.props.resource.prereqs);
+        ApplyCost(this.props.resource.prereqs,1);
       }
       this.props.setQuantity(this.props.resource.quantity);
     }}>
@@ -60,9 +65,9 @@ export class AutoButton extends Component <AutoButtonParams> {
   render(): JSX.Element {
     return <button onClick={(event: MouseEvent)=>{
       event.preventDefault();
-      if (CanDo(this.props.resource.auto_prereqs)) {
+      if (CanDo(this.props.resource.auto_prereqs,1+this.props.resource.auto_number)) {
         this.props.resource.auto_number += 1;
-        ApplyCost(this.props.resource.auto_prereqs);
+        ApplyCost(this.props.resource.auto_prereqs, this.props.resource.auto_number);
       }
       this.props.setAutoNumber(this.props.resource.auto_number);
     }}>
@@ -75,14 +80,20 @@ export class PowerPlantButton extends Component <PowerPlantParams> {
   render(): JSX.Element {
     return <button onClick={(event: MouseEvent) => {
       event.preventDefault;
-      if (CanDo(this.props.power.prereqs)) {
+      if (CanDo(this.props.power.prereqs, 1+this.props.power.quantity)) {
         this.props.power.quantity += 1;
-        ApplyCost(this.props.power.prereqs);
+        ApplyCost(this.props.power.prereqs, 1+this.props.power.quantity);
       }
     }}>
       {this.props.message}
     </button>
   }
+}
+
+const DisplayQuantity : React.FC<CostsParams> = (props: CostsParams) => {
+  return <span className="resource_display">
+    {"Cost"}
+  </span>
 }
 
 let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
@@ -91,7 +102,7 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
   
   return (
     <p>
-      {resource.resource_name} {Math.floor(resource.quantity)}
+      {resource.resource_name} {Math.floor(resource.quantity)} {<DisplayQuantity quantity={1} costs={resource.prereqs}/>}
       <br />
       <Button message="Harvest" resource={resource} setQuantity={setQuantity}/>
       <br />
