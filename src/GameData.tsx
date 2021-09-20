@@ -12,10 +12,10 @@ export interface PowerName {
 }
   
 export let GameDatabase: ResourceName[] = [
-    {resource_name: "Wood", auto_name:"Chop Wood", prereqs:{}, auto_prereqs:{"Wood":4}},
-    {resource_name: "Stone", auto_name:"Quarry Stone", prereqs:{"Wood":1}, auto_prereqs:{"Wood":4}},
-    {resource_name: "Copper", auto_name:"Mine Copper", prereqs:{"Wood":2}, auto_prereqs:{"Wood":4}},
-    {resource_name: "Iron", auto_name:"Mine Iron", prereqs:{"Wood":5}, auto_prereqs:{"Wood":4}}
+    {resource_name: "Wood", auto_name:"Chop", prereqs:{}, auto_prereqs:{"Wood":4}},
+    {resource_name: "Stone", auto_name:"Quarry", prereqs:{"Wood":1}, auto_prereqs:{"Wood":4}},
+    {resource_name: "Copper", auto_name:"Mine", prereqs:{"Wood":2}, auto_prereqs:{"Wood":4}},
+    {resource_name: "Iron", auto_name:"Mine", prereqs:{"Wood":5}, auto_prereqs:{"Wood":4}}
 ]
   
 export let PowerDatabase: PowerName[] = [

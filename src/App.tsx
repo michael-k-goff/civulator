@@ -82,7 +82,7 @@ export class PowerPlantButton extends Component <PowerPlantParams> {
       event.preventDefault;
       if (CanDo(this.props.power.prereqs, 1+this.props.power.quantity)) {
         this.props.power.quantity += 1;
-        ApplyCost(this.props.power.prereqs, 1+this.props.power.quantity);
+        ApplyCost(this.props.power.prereqs, this.props.power.quantity);
       }
     }}>
       {this.props.message}
@@ -91,8 +91,12 @@ export class PowerPlantButton extends Component <PowerPlantParams> {
 }
 
 const DisplayQuantity : React.FC<CostsParams> = (props: CostsParams) => {
+  let cost_string = Object.keys(props.costs).length === 0 ? "" : "";
+  for (let key in props.costs) {
+    cost_string = cost_string + " " + props.quantity * props.costs[key] + " " + key;
+  }
   return <span className="resource_display">
-    {"Cost"}
+    {cost_string}
   </span>
 }
 
@@ -102,13 +106,15 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
   
   return (
     <p>
-      {resource.resource_name} {Math.floor(resource.quantity)} {<DisplayQuantity quantity={1} costs={resource.prereqs}/>}
+      {resource.resource_name} {Math.floor(resource.quantity)}
       <br />
       <Button message="Harvest" resource={resource} setQuantity={setQuantity}/>
+      {<DisplayQuantity quantity={1} costs={resource.prereqs}/>}
       <br />
       {resource.auto_name} {resource.auto_number}
       <br />
       <AutoButton message={resource.auto_name} resource={resource} setAutoNumber={setAutoNumber}/>
+      {<DisplayQuantity quantity={1+resource.auto_number} costs={resource.auto_prereqs}/>}
     </p>
   )
 }
@@ -118,6 +124,7 @@ let PowerPlantDisplay = ({plant}: {plant: Power}): JSX.Element => {
     {plant.name} {plant.quantity}
     <br />
     <PowerPlantButton message="Build" power={plant}/>
+    {<DisplayQuantity quantity={1+plant.quantity} costs={plant.prereqs}/>}
   </p>
 }
 
