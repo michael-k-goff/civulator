@@ -103,6 +103,10 @@ const DisplayQuantity : React.FC<CostsParams> = (props: CostsParams) => {
 let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
   const [quantity, setQuantity] = useState(resource.quantity);
   const [auto_number, setAutoNumber] = useState(resource.auto_number);
+
+  if (!resource.visible) {
+    return <></>
+  }
   
   return (
     <div className="resource-div">
@@ -120,6 +124,9 @@ let TSResourceDisplay = ({ resource }: { resource: Resource }): JSX.Element => {
 }
 
 let PowerPlantDisplay = ({plant}: {plant: Power}): JSX.Element => {
+  if (!plant.visible) {
+    return <></>
+  }
   return <div className="power-div">
     {plant.name} {plant.quantity}
     <br />
@@ -150,7 +157,15 @@ const App = ():JSX.Element => {
       if (frameCount % 10 === 0) {
         for (let i=0; i<gameData.resources.length; i++) {
           gameData.resources[i].quantity += NumAutoBonus(gameData.resources[i]);
+          if (CanDo(gameData.resources[i].prereqs,1)) {
+            gameData.resources[i].visible = true
+          }
           total_quantity += gameData.resources[i].quantity
+        }
+        for (let i=0; i<powerData.length; i++) {
+          if (CanDo(powerData[i].prereqs,1)) {
+            powerData[i].visible=true
+          }
         }
       }
       setFrameCount((frameCount) => frameCount+1); 
