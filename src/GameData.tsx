@@ -12,35 +12,35 @@ export interface PowerName {
 }
   
 export let GameDatabase: ResourceName[] = [
-    {resource_name: "Wood", auto_name:"Chop", prereqs:{}, auto_prereqs:{"Wood":4}},
-    {resource_name: "Stone", auto_name:"Quarry", prereqs:{"Wood":1}, auto_prereqs:{"Wood":4,"Stone":4}},
-    {resource_name: "Copper", auto_name:"Mine", prereqs:{"Stone":2}, auto_prereqs:{"Copper":4}},
-    {resource_name: "Iron", auto_name:"Mine", prereqs:{"Copper":5}, auto_prereqs:{"Iron":4}},
-    {resource_name: "Steel", auto_name:"Forge", prereqs:{"Iron":3}, auto_prereqs:{"Steel":4,"Iron":5}},
-    {resource_name: "Sulphur",auto_name:"Mine", prereqs:{"Steel":10}, auto_prereqs:{"Sulphur":3,"Steel":5}},
-    {resource_name: "Aluminum", auto_name:"Mine", prereqs:{"Sulphur":5}, auto_prereqs:{"Aluminum":3}},
-    {resource_name: "Titanium", auto_name:"Mine", prereqs:{"Aluminum":8,"Steel":5}, auto_prereqs:{"Titanium":5}},
-    {resource_name: "Rare Earths", auto_name:"Mine",prereqs:{"Titanium":5}, auto_prereqs:{"Rare Earths":5}},
-    {resource_name: "Graphene", auto_name:"Make",prereqs:{"Rare Earths":3,"Titanium":3}, auto_prereqs:{"Graphene":3,"Rare Earths":5}},
-    {resource_name: "Plasteel", auto_name:"Make",prereqs:{"Graphene":5},auto_prereqs:{"Graphene":3,"Plasteel":4}},
-    {resource_name: "Antimatter",auto_name:"Create",prereqs:{"Plasteel":4},auto_prereqs:{"Antimatter":3,"Plasteel":3,"Graphene":3}},
-    {resource_name: "Dark Matter",auto_name:"Harvest",prereqs:{"Antimatter":5},auto_prereqs:{"Dark Matter":5,"Antimatter":1}},
-    {resource_name: "Tesseract",auto_name:"Build",prereqs:{"Dark Matter":3},auto_prereqs:{"Tesseract":3,"Antimatter":1,"Dark Matter":2}},
-    {resource_name: "Unobtainium",auto_name: "Make",prereqs:{"Tesseract":4},auto_prereqs:{"Unobtainium":5}}
+    {resource_name: "Wood", auto_name:"Chop", prereqs:{}, auto_prereqs:{"Wood":20}},
+    {resource_name: "Stone", auto_name:"Quarry", prereqs:{"Wood":10}, auto_prereqs:{"Wood":40,"Stone":40}},
+    {resource_name: "Copper", auto_name:"Mine", prereqs:{"Stone":20}, auto_prereqs:{"Copper":40}},
+    {resource_name: "Iron", auto_name:"Mine", prereqs:{"Copper":50}, auto_prereqs:{"Iron":40}},
+    {resource_name: "Steel", auto_name:"Forge", prereqs:{"Iron":30}, auto_prereqs:{"Steel":40,"Iron":50}},
+    {resource_name: "Sulphur",auto_name:"Mine", prereqs:{"Steel":100}, auto_prereqs:{"Sulphur":30,"Steel":50}},
+    {resource_name: "Aluminum", auto_name:"Mine", prereqs:{"Sulphur":50}, auto_prereqs:{"Aluminum":30}},
+    {resource_name: "Titanium", auto_name:"Mine", prereqs:{"Aluminum":80,"Steel":50}, auto_prereqs:{"Titanium":50}},
+    {resource_name: "Rare Earths", auto_name:"Mine",prereqs:{"Titanium":50}, auto_prereqs:{"Rare Earths":50}},
+    {resource_name: "Graphene", auto_name:"Make",prereqs:{"Rare Earths":30,"Titanium":30}, auto_prereqs:{"Graphene":30,"Rare Earths":50}},
+    {resource_name: "Plasteel", auto_name:"Make",prereqs:{"Graphene":50},auto_prereqs:{"Graphene":30,"Plasteel":40}},
+    {resource_name: "Antimatter",auto_name:"Create",prereqs:{"Plasteel":40},auto_prereqs:{"Antimatter":30,"Plasteel":30,"Graphene":30}},
+    {resource_name: "Dark Matter",auto_name:"Harvest",prereqs:{"Antimatter":50},auto_prereqs:{"Dark Matter":50,"Antimatter":10}},
+    {resource_name: "Tesseract",auto_name:"Build",prereqs:{"Dark Matter":30},auto_prereqs:{"Tesseract":30,"Antimatter":10,"Dark Matter":20}},
+    {resource_name: "Unobtainium",auto_name: "Make",prereqs:{"Tesseract":40},auto_prereqs:{"Unobtainium":50}}
 ]
   
 export let PowerDatabase: PowerName[] = [
-    {plant_name: "Stoneworks", prereqs:{"Wood":4,"Stone":4}, affects:["Wood","Stone"]},
-    {plant_name: "Forge", prereqs:{"Iron":4,"Copper":4}, affects:["Copper","Iron","Steel"]},
-    {plant_name: "Windmill",prereqs:{"Sulphur":5}, affects:["Iron","Steel","Sulphur"]},
-    {plant_name: "Coal Plant",prereqs:{"Aluminum":3,"Iron":5},affects:["Sulphur","Aluminum"]},
-    {plant_name: "Gas Plant",prereqs:{"Aluminum":6},affects:["Aluminum","Titanium"]},
-    {plant_name: "Nuclear Plant",prereqs:{"Titanium":5},affects:["Titanium"]},
-    {plant_name: "Solar Farm",prereqs:{"Rare Earths":5,"Titanium":3},affects:["Titanium","Aluminum","Rare Earths"]},
-    {plant_name: "Fusion Plant",prereqs:{"Graphene":4},affects:["Graphene","Rare Earths"]},
-    {plant_name: "Cold Fusion Plant",prereqs:{"Plasteel":5},affects:["Plasteel","Graphene","Rare Earths"]},
-    {plant_name: "Dyson Sphere",prereqs:{"Antimatter":4,"Plasteel":4},affects:["Plasteel","Antimatter"]},
-    {plant_name: "Dark Energy Plant",prereqs:{"Dark Matter":6},affects:["Antimatter","Dark Matter","Tesseract","Unobtainium"]}
+    {plant_name: "Stoneworks", prereqs:{"Wood":40,"Stone":40}, affects:["Wood","Stone"]},
+    {plant_name: "Forge", prereqs:{"Iron":40,"Copper":40}, affects:["Copper","Iron","Steel"]},
+    {plant_name: "Windmill",prereqs:{"Sulphur":50}, affects:["Iron","Steel","Sulphur"]},
+    {plant_name: "Coal Plant",prereqs:{"Aluminum":30,"Iron":50},affects:["Sulphur","Aluminum"]},
+    {plant_name: "Gas Plant",prereqs:{"Aluminum":60},affects:["Aluminum","Titanium"]},
+    {plant_name: "Nuclear Plant",prereqs:{"Titanium":50},affects:["Titanium"]},
+    {plant_name: "Solar Farm",prereqs:{"Rare Earths":50,"Titanium":3},affects:["Titanium","Aluminum","Rare Earths"]},
+    {plant_name: "Fusion Plant",prereqs:{"Graphene":40},affects:["Graphene","Rare Earths"]},
+    {plant_name: "Cold Fusion Plant",prereqs:{"Plasteel":50},affects:["Plasteel","Graphene","Rare Earths"]},
+    {plant_name: "Dyson Sphere",prereqs:{"Antimatter":40,"Plasteel":40},affects:["Plasteel","Antimatter"]},
+    {plant_name: "Dark Energy Plant",prereqs:{"Dark Matter":60},affects:["Antimatter","Dark Matter","Tesseract","Unobtainium"]}
 ]
 
 export interface Resource{
