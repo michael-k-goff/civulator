@@ -1,17 +1,17 @@
-import React, { PureComponent, Component, MouseEvent, useState, useEffect } from 'react'
+import React, { PureComponent, Component, MouseEvent, useState, useEffect, Dispatch } from 'react'
 import {Resource, Power, gameData, powerData} from './GameData'
 import './App.css'
 
 interface ButtonParams {
   message: string,
   resource: Resource,
-  setQuantity: any
+  setQuantity: Dispatch<number>
 }
 
 interface AutoButtonParams {
   message: string,
   resource: Resource,
-  setAutoNumber: any
+  setAutoNumber: Dispatch<number>
 }
 
 interface PowerPlantParams {
@@ -150,6 +150,7 @@ const NumAutoBonus = (resource: Resource): number => {
 
 const App = ():JSX.Element => {
   const [frameCount, setFrameCount] = useState(0)
+  const [kitty, setKitty] = useState("asdf")
 
   useEffect(() => {
     const interval = setInterval(() => {
